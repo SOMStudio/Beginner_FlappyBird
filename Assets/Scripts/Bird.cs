@@ -12,16 +12,20 @@ public class Bird : MonoBehaviour {
     private Rigidbody2D rigidbody;
     private bool isAlive = true;
 
+    private bool screenClick = false;
+
     private void Start () {
         rigidbody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update () {
-        if (Input.GetKeyDown(KeyCode.Space) && isAlive)
+        if ((Input.GetKeyDown(KeyCode.Space) || screenClick == true) && isAlive)
         {
             rigidbody.velocity = Vector2.zero;
             rigidbody.AddForce(new Vector2(0.5f, 1) * 50f);
+
+            screenClick = false;
         }
     }
 
@@ -35,5 +39,10 @@ public class Bird : MonoBehaviour {
             
             deathEvent?.Invoke();
         }
+    }
+
+    public void ClickScreenButton()
+    {
+        screenClick = true;
     }
 }
