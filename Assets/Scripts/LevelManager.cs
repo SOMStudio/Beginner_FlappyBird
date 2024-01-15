@@ -30,4 +30,14 @@ public class LevelManager : MonoBehaviour
     {
         Invoke(nameof(LoadLevelList), delayLoadTime);
     }
+
+    public void CompleteLevel()
+    {
+        GameManager.gameManager.CompleteLevel();
+    }
+
+    public void ResetGame()
+    {
+        GameManager.gameManager.ResetGame();
+    }
 }
