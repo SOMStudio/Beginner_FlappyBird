@@ -1,22 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class Bird : MonoBehaviour {
 
     public Sprite deathSprite;
-    SpriteRenderer spriteRenderer;
-    Rigidbody2D rigidbody;
-    bool isAlive = true;
 
-    // Use this for initialization
-    void Start () {
-        rigidbody = this.GetComponent<Rigidbody2D>();
-        spriteRenderer = this.GetComponent<SpriteRenderer>();
+    [Header("Events")]
+    public UnityEvent deathEvent;
+    
+    private SpriteRenderer spriteRenderer;
+    private Rigidbody2D rigidbody;
+    private bool isAlive = true;
+
+    private void Start () {
+        rigidbody = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update () {
+    private void Update () {
         if (Input.GetKeyDown(KeyCode.Space) && isAlive)
         {
             rigidbody.velocity = Vector2.zero;
@@ -31,6 +32,8 @@ public class Bird : MonoBehaviour {
             isAlive = false;
             spriteRenderer.sprite = deathSprite;
             rigidbody.velocity = Vector2.down;
+            
+            deathEvent?.Invoke();
         }
     }
 }
