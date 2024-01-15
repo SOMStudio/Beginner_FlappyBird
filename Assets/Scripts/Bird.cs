@@ -1,36 +1,42 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class Bird : MonoBehaviour
 {
     public float speed = 50f;
     public GameObject hitSprite;
+    public AudioClip[] audioClips;
 
     [Header("Events")] public UnityEvent deathEvent;
 
     private SpriteRenderer spriteRenderer;
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rigidbodyMy;
     private bool isAlive = true;
 
     private bool screenClick = false;
 
     private Animator animator;
+    public AudioSource[] audioSource;
 
     private void Start()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
+        rigidbodyMy = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponents<AudioSource>();
     }
 
     private void Update()
     {
         if ((Input.GetKeyDown(KeyCode.Space) || screenClick == true) && isAlive)
         {
-            rigidbody.velocity = Vector2.zero;
-            rigidbody.AddForce(new Vector2(0.5f, 1) * speed);
+            rigidbodyMy.velocity = Vector2.zero;
+            rigidbodyMy.AddForce(new Vector2(0.5f, 1) * speed);
 
             animator.SetTrigger("Flip");
+
+            PlaySound(0);
 
             screenClick = false;
         }
@@ -41,11 +47,14 @@ public class Bird : MonoBehaviour
         if (collision.gameObject.tag == "Wall")
         {
             isAlive = false;
-            rigidbody.velocity = Vector2.down;
+            rigidbodyMy.velocity = Vector2.down;
 
             animator.SetTrigger("Death");
 
             ShowHitSprite(collision.contacts[0].point);
+            
+            PlaySound(1);
+            PlaySound(2, 1);
 
             deathEvent?.Invoke();
         }
@@ -62,6 +71,12 @@ public class Bird : MonoBehaviour
     private void HideHitSprite()
     {
         hitSprite.SetActive(false);
+    }
+
+    private void PlaySound(int numberClip, int numberAudioSource = 0)
+    {
+        audioSource[numberAudioSource].clip = audioClips[numberClip];
+        audioSource[numberAudioSource].Play();
     }
 
     public void ClickScreenButton()
