@@ -21,7 +21,7 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene(nameLevel);
     }
 
-    private void LoadLevelList()
+    public void LoadLevelList()
     {
         LoadLevel("LevelList");
     }
